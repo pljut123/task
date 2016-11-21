@@ -1,0 +1,39 @@
+{% load staticfiles %}
+<html>
+        <head><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+              <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+              <link rel="stylesheet" href="{% static 'css/post.css' %}">
+              <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+               <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+            <title>
+                    Django  blog
+            </title>
+        </head>
+        <body>
+
+             </div>
+             <div class="page-header">
+                  {% if user.is_authenticated %}
+
+                       <li><a href="/auth/logout">logout ({{ request.user.username }})
+                           <img class="avatar" src="{{ request.user.avatar.url }}" width="35px" height="35px">
+                       </a></li>
+                  {% else %}
+                            <li><a href="/auth/login">login</a></li>
+                  {% endif %}
+                 <h1><a href="/">Django Blog</a></h1>
+             </div>
+             <div class="content container">
+                 <div class="row">
+                 <div class="col-md-8">
+                  {% block content %}
+                  {% endblock %}
+                     {% block login %}
+                  {% endblock %}
+                 </div>
+                 </div>
+             </div>
+
+
+        </body>
+</html>

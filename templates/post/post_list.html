@@ -1,0 +1,42 @@
+{% extends 'post/base.html' %}
+{% load staticfiles %}
+{% load el_pagination_tags %}
+
+{% block content %}
+    {% block js %}
+        {{ block.super }}
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "el-pagination/js/el-pagination.js" %}"></script>
+    <script> $.endlessPaginate({
+            paginateOnScroll: true,
+            paginateOnScrollMargin: 20
+        });
+    </script>
+
+    {% endblock %}
+
+    <div class="panel right">
+      {% if user.is_authenticated %}
+        <img class="avatar" src="{{ request.user.avatar.url }}" width="35px" height="35px">
+          {{ request.user.username }} :
+        <p>
+            <form action="/submit" method="post">
+            {% csrf_token %}
+            {{ post_form }}
+
+
+            <input type="submit" value="Post!">
+            </form>
+
+      {% endif %}
+        </p>
+    </div>
+    <div class="panel left">
+        <h1>Public Posts</h1>
+    {% include "post/post_list_page.html" %}
+
+
+
+
+    </div>
+{% endblock %}

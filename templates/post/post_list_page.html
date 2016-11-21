@@ -1,0 +1,13 @@
+{% load el_pagination_tags %}
+{% paginate 5 posts %}
+{% for post in posts %}
+    <div class="tweetWrapper">
+        {% if post.author.avatar %}
+            <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
+        {% endif %}
+        <span class="name">{{ post.author.username}} </span>
+        <p>{{ post.text }}</p>
+        <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
+    </div>
+{% endfor %}
+{% show_more %}
