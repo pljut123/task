@@ -79,11 +79,11 @@ def register(request):
             if user is not None:
                 auth.login(request, user)
                 subject = message.subject
-                contact_message = message.contact_message
+                contact_message = message.contact_message % request.POST['username']
                 from_email = settings.EMAIL_HOST_USER
                 to_email = [email]
-                send_mail(subject, contact_message, from_email, to_email,
-                          fail_silently=False)
+                send_mail(subject, contact_message, from_email, to_email)
+
                 return redirect('/')
             else:
                 raise PermissionDenied

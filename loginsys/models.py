@@ -50,7 +50,7 @@ class MyUser(AbstractBaseUser):
     )
     username = models.TextField(max_length=50)
     avatar = models.ImageField(null=True, blank=True, upload_to='image/',
-                              verbose_name="image")
+                              verbose_name="image", default='avatar/avatar.png')
     date_of_register = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
