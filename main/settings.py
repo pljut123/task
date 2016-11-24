@@ -25,13 +25,13 @@ SECRET_KEY = 'y))15m&j4lc+7x5m6mjgm7juw858s8-k+gxgwf)qej$klu1+vt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pljut11.pythonanywhere.com']
 
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = "pljut@yandex.ru"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "pljut098@gmail.com"
 EMAIL_HOST_PASSWORD = "pljut4102"
-EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True
 
 # Application definition
 
