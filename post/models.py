@@ -35,9 +35,17 @@ class Post(models.Model):
     # def __str__(self):
     #     return self.title
 
+
+def add_user(self):
+    return Follows.follows.add(self.user)
+
+
 class Follows(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     follows = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='followed_by')
+
+    # def add_user(self):
+    #     return Follows.follows.add(self.user)
 
     def __str__(self):
         return self.user.username

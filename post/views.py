@@ -81,6 +81,7 @@ class post_list(AjaxListView):
         context['post_form'] = PostForm()
         return context
 
+
 class post_follow(ListView):
     context_object_name = "posts"
     template_name = "post/post_follow.html"

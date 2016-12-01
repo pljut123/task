@@ -15,15 +15,14 @@
         <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
         <input type="button" id="like-{{ post.id }}" name="{{ post.id }}" value="Like {{ post.total_likes }}" />
         {% if user.is_authenticated %}
-            {% if not user.id == post.author.id %}
 
-                {% foll request.user post as is_follow %}
+            {% foll request.user post as is_follow %}
 
-                {% if not is_follow %}
-                    <input onclick="style.display='none'" type="button" id="follows-{{ post.id }}" name="{{ post.id }}" value="Подписаться" />
-                {% endif %}
-
+            {% if not is_follow %}
+                <input onclick="style.display='none'" type="button" id="follows-{{ post.id }}" name="{{ post.id }}" value="Подписаться" />
             {% endif %}
+
+
          {% endif %}
     </div>
 {% endfor %}

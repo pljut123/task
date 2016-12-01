@@ -5,48 +5,35 @@
 
 {% block content %}
     {% block js %}
-            {{ block.super }}
+        {{ block.super }}
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script type="text/javascript" src="{% static 'js/basejs.js' %}"></script>
         <script src="{% static "el-pagination/js/el-pagination.js" %}"></script>
         <script src="{% static 'js/java.js' %}"></script>
         <script> $.endlessPaginate({
-                paginateOnScroll: true,
-                paginateOnScrollMargin: 20
-            });
+            paginateOnScroll: true,
+            paginateOnScrollMargin: 20
+        });
         </script>
 
     {% endblock %}
     {% for post in posts %}
 
-             {% if post.author.id == request.user.id  %}
-                 <div class="tweetWrapper">
+        {% foll request.user post as is_follow %}
+        {% if  is_follow %}
+            <div class="tweetWrapper">
 
-                        <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
+                <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
 
-                        <span class="name">{{ post.author.username}} </span>
-                        <p>{{ post.text }}</p>
-                        <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
-                        <input type="button" id="like-{{ post.id }}" name="{{ post.id }}" value="Like {{ post.total_likes }}" />
-
-
-                 </div>
-             {% endif %}
-            {% foll request.user post as is_follow %}
-                    {% if  is_follow %}
-                        <div class="tweetWrapper">
-
-                            <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
-
-                            <span class="name">{{ post.author.username}} </span>
-                            <p>{{ post.text }}</p>
-                            <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
-                            <input type="button" id="like-{{ post.id }}" name="{{ post.id }}" value="Like {{ post.total_likes }}" />
+                <span class="name">{{ post.author.username}} </span>
+                <p>{{ post.text }}</p>
+                <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
+                <input type="button" id="like-{{ post.id }}" name="{{ post.id }}" value="Like {{ post.total_likes }}" />
 
 
-                         </div>
-                     {% endif %}
+            </div>
+        {% endif %}
 
-{% endfor %}
+    {% endfor %}
 {% endblock %}

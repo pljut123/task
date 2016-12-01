@@ -11,6 +11,8 @@ def get_foll(user, post):
         foll = Follows.objects.get(user=user)
         if author in foll.follows.all():
             return True
+        if author == user:
+            return True
         else:
             return False
     except Follows.DoesNotExist:
