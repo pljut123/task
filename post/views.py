@@ -1,16 +1,40 @@
-from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http.response import HttpResponse
-from django.shortcuts import render, redirect, render_to_response
-from django.template import RequestContext
-from django.template.context_processors import csrf
-from el_pagination.decorators import page_template
+from django.core.serializers import json
+from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+from django.views.generic import DetailView
+from django.views.generic import ListView
 from el_pagination.views import AjaxListView
+
 from loginsys.models import MyUser
 from post.forms import PostForm
-from post.models import Post
+from post.models import Post, Follows
 
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
+
+
+@login_required
+def addlike(request):
+    if request.method == 'POST':
+        user = request.user
+        id = request.POST.get('id', None)
+        post = get_object_or_404(Post, id=id)
+
+        if post.likes.filter(id=user.id).exists():
+
+            post.likes.remove(user)
+
+        else:
+
+            post.likes.add(user)
+
+    ctx = {'likes_count': post.total_likes}
+
+    return HttpResponse(json.dumps(ctx), content_type='application/json')
 
 
 def submit(request):
@@ -31,54 +55,21 @@ def submit(request):
     return redirect('/')
 
 
+def follows(request):
+    if request.method == "POST":
+        user = request.user
+        id = request.POST.get('id', None)
+        author = Post.objects.get(id=id).author
+        foll = Follows.objects.get_or_create(user=user)[0]
+        foll.follows.add(author)
+        message = 'Вы подписались на %s' %author.username
 
-# def post_list(request, template='post/post_list.html'):
+    ctx = {'message': message}
+    return HttpResponse(json.dumps(ctx), content_type='application/json')
 
-    # post_form = post_form or PostForm()
-    # posts = Post.objects.all().order_by('-created_date')
-    #
-    # paginator = Paginator(posts, 10)  # Show 25 contacts per page
-    #
-    # page = request.GET.get('page')
-    # try:
-    #      posts = paginator.page(page)
-    # except PageNotAnInteger:
-    #     # If page is not an integer, deliver first page.
-    #      posts = paginator.page(1)
-    # except EmptyPage:
-    #     # If page is out of range (e.g. 9999), deliver last page of results.
-    #     posts = paginator.page(paginator.num_pages)
-    #
-    #
-    # return render(request,
-    #     'post/post_list.html',
-    #     {'post_form': post_form, 'next_url': '/post_list',
-    #     'posts': posts,})
 
-    #
-    # context = {
-    #     'posts': Post.objects.all(),
-    # }
-    # return render_to_response(
-    #     template, context, context_instance=RequestContext(request))
-# class post_list(AjaxListView):
-#     context_object_name = "posts"
-#     template_name = "post/post_list.html"
-#
-#     def get_queryset(self):
-#         return Post.objects.all()
-# @page_template('post/post_list_page.html')  # just add this decorator
-# def post_list(request,
-#         template='post/post_list.html', extra_context=None):
-#     context = {
-#         'post_list': Post.objects.all(),
-#     }
-#     if extra_context is not None:
-#         context.update(extra_context)
-#     return render(request,
-#         template, context, context_instance=RequestContext(request))
+
 class post_list(AjaxListView):
-
     context_object_name = "posts"
     template_name = "post/post_list.html"
 
@@ -89,3 +80,13 @@ class post_list(AjaxListView):
         context = super(post_list, self).get_context_data(**kwargs)
         context['post_form'] = PostForm()
         return context
+
+class post_follow(ListView):
+    context_object_name = "posts"
+    template_name = "post/post_follow.html"
+
+    def get_queryset(self):
+        # self.foll = Follows.objects.get(id).follows
+        # self.posts = Post.objects.filter(id=self.foll)
+        return Post.objects.all().order_by('-created_date')
+

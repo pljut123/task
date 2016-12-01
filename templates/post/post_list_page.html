@@ -1,13 +1,33 @@
 {% load el_pagination_tags %}
-{% paginate 5 posts %}
+{% load staticfiles %}
+{% load followstags %}
+{% load static %}
+{% paginate 15 posts %}
+
+
 {% for post in posts %}
     <div class="tweetWrapper">
-        {% if post.author.avatar %}
-            <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
-        {% endif %}
+
+        <img class="avatar" src="{{ post.author.avatar.url }}" width="35px" height="35px">
+
         <span class="name">{{ post.author.username}} </span>
         <p>{{ post.text }}</p>
         <span class="time">{{ post.created_date|date:"SHORT_DATE_FORMAT" }} {{ post.created_date|time:"H:i" }}</span>
+        <input type="button" id="like-{{ post.id }}" name="{{ post.id }}" value="Like {{ post.total_likes }}" />
+        {% if user.is_authenticated %}
+            {% if not user.id == post.author.id %}
+
+                {% foll request.user post as is_follow %}
+
+                {% if not is_follow %}
+                    <input onclick="style.display='none'" type="button" id="follows-{{ post.id }}" name="{{ post.id }}" value="Подписаться" />
+                {% endif %}
+
+            {% endif %}
+         {% endif %}
     </div>
 {% endfor %}
+
+
+
 {% show_more %}
