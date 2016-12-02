@@ -1,7 +1,8 @@
 $(function() {
 
-    $('[id^="follows-"]').click(function (e) {
-
+    $('body').on('click', '[data-author-id^="follows-"]', function (e) {
+        var self = this;
+        console.log(self)
         e.preventDefault();
         $.ajax({
             type: "POST",
@@ -13,7 +14,9 @@ $(function() {
             success: function (response) {
 
                 alert(response.message)
-                document.getElementById("nameID").style.visibility = "hidden";
+                $("[data-author-id='"+$(self).attr("data-author-id")+"']").hide();
+
+
             },
             error: function (rs, e) {
                 alert("Aвторизируйтесь");

@@ -19,7 +19,7 @@
             {% foll request.user post as is_follow %}
 
             {% if not is_follow %}
-                <input onclick="style.display='none'" type="button" id="follows-{{ post.id }}" name="{{ post.id }}" value="Подписаться" />
+                <input type="button" data-author-id="follows-{{ post.author.id }}" name="{{ post.id }}" value="Подписаться" />
             {% endif %}
 
 
